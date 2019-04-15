@@ -6,15 +6,12 @@ import Home from './pages/Home';
 import {
   transitionConfig,
   defaultNavigationOptions
-} from './config/navigationConfig';
+} from './config/NavigationConfig';
 
 
 const AppStack = createStackNavigator(
   { Home },
-  {
-    transitionConfig,
-    defaultNavigationOptions
-  }
+  { transitionConfig, defaultNavigationOptions }
 );
 const AuthStack = createStackNavigator(
   { SignIn }
