@@ -3,9 +3,18 @@ import { createAppContainer, createSwitchNavigator, createStackNavigator } from 
 import Splash from './pages/Splash';
 import SignIn from './pages/SignIn';
 import Home from './pages/Home';
+import {
+  transitionConfig,
+  defaultNavigationOptions
+} from './config/navigationConfig';
+
 
 const AppStack = createStackNavigator(
-  { Home }
+  { Home },
+  {
+    transitionConfig,
+    defaultNavigationOptions
+  }
 );
 const AuthStack = createStackNavigator(
   { SignIn }
