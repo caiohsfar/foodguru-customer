@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "616635546594",
+    "firebase_url": "https://food-guru-customer.firebaseio.com",
+    "project_id": "food-guru-customer",
+    "storage_bucket": "food-guru-customer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616635546594:android:b0dd08694369505f",
+        "android_client_info": {
+          "package_name": "com.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616635546594-eb9ke3322kme6a09uf0aak7re90otnji.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlDULAAf0KXFwa4qUSX75NcrP8RDVgi58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616635546594-eb9ke3322kme6a09uf0aak7re90otnji.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,11 +10,22 @@ import {
 
 
 const AppStack = createStackNavigator(
-  { Home },
+  {
+    Home: {
+      screen: Home,
+      navigationOptions: { headerTitle: 'Home' }
+    }
+  },
   { transitionConfig, defaultNavigationOptions }
 );
 const AuthStack = createStackNavigator(
-  { SignIn }
+  {
+    SignIn: {
+      screen: SignIn,
+      navigationOptions: { headerTitle: 'Login' }
+    }
+  },
+  { defaultNavigationOptions }
 );
 // A Switch Navigator é feita para o fluxo de autenticação. (ler documentação)
 
@@ -25,7 +36,7 @@ const Routes = createAppContainer(createSwitchNavigator(
     Auth: AuthStack,
   },
   {
-    initialRouteName: 'Splash',
+    initialRouteName: 'Auth',
   }
 ));
 
