@@ -36,7 +36,7 @@ const Routes = createAppContainer(createSwitchNavigator(
     Auth: AuthStack,
   },
   {
-    initialRouteName: 'Auth',
+    initialRouteName: 'Splash',
   }
 ));
 

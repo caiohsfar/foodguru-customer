@@ -1,59 +1,56 @@
 import React, { Component } from 'react';
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 import firebase from 'react-native-firebase';
 import {
-  View, Text
+  View, Text, ActivityIndicator
 } from 'react-native';
-import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk';
-
-// Adequar ao redux!!!
+import {
+  LoginButton, LoginManager
+} from 'react-native-fbsdk';
+import {
+  getUserCredential, getAccessToken, signInFirebase, setUserDataFromFacebook
+} from '../../services/facebookService';
 
 export default class SignIn extends Component {
-  googleSignIn = async () => {
-    try {
-      // Add any configuration settings here:
-      await GoogleSignin.configure();
-
-      const data = await GoogleSignin.signIn();
-
-      // create a new firebase credential with the token
-      const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
-      // login with credential
-      const currentUser = await firebase.auth().signInWithCredential(credential);
-
-      // console.info(JSON.stringify(currentUser.toJSON()));
-    } catch (e) {
-      // console.error(e);
-    }
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: false };
   }
 
   // Calling the following function will open the FB login dialogue:
-  facebookLogin = async () => {
+  openFacebookDialog = async () => {
     try {
       const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
 
       if (result.isCancelled) {
         throw new Error('User cancelled request'); // Handle this however fits the flow of your app
       }
-
-      console.log(`Login success with permissions: ${result.grantedPermissions.toString()}`);
-
-      // get the access token
-      const data = await AccessToken.getCurrentAccessToken();
-
-      if (!data) {
-        throw new Error('Something went wrong obtaining the users access token'); // Handle this however fits the flow of your app
-      }
-
-      // create a new firebase credential with the token
-      const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-
-      // login with credential
-      const currentUser = await firebase.auth().signInWithCredential(credential);
-
-      console.info(JSON.stringify(currentUser.toJSON()));
     } catch (e) {
-      console.error(e);
+      console.log(e);
+    }
+  }
+
+  onLoginFinished = async (error, result) => {
+    if (error) {
+      console.log(`login has error: ${result.error}`);
+    } else if (result.isCancelled) {
+      console.log('login is cancelled.');
+    } else {
+      this.setState({ isLoading: true });
+      try {
+        const data = await getAccessToken();
+        const credential = getUserCredential(data.accessToken);
+        const user = await signInFirebase(credential);
+        await setUserDataFromFacebook(user);
+        if (firebase.auth().currentUser) {
+          // SEND USER TO API
+          // const { email, name } = firebase.auth().currentUser;
+          // const user = { email, name };
+          // api.post(user);
+          this.props.navigation.navigate('App');
+        }
+      } catch (e) {
+        throw new Error('failed to login');
+      }
     }
   }
 
@@ -61,16 +58,11 @@ export default class SignIn extends Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text> SignIn </Text>
-        <GoogleSigninButton
-          style={{ width: 192, height: 48 }}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={this.googleSignIn}
-         // disabled={this.state.isSigninInProgress}
-        />
-
+        {this.state.isLoading && <ActivityIndicator />}
         <LoginButton
-          onPress={this.facebookLogin}
+          readPermissions={['public_profile', 'email']}
+          onPress={this.openFacebookDialog}
+          onLoginFinished={this.onLoginFinished}
         />
       </View>
     );

@@ -120,6 +120,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
         }
     }
     // applicationVariants are e.g. debug, release
@@ -139,7 +140,6 @@ android {
 
 dependencies {
     implementation project(':react-native-fbsdk')
-    implementation project(':react-native-google-signin')
     implementation project(':react-native-firebase')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])

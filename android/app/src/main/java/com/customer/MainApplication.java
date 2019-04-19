@@ -7,7 +7,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -37,7 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new FBSDKPackage(mCallbackManager),
-            new RNGoogleSigninPackage(),
             new RNFirebasePackage(),
             new RNGestureHandlerPackage(),
             new RNFirebaseAuthPackage()
@@ -50,15 +48,15 @@ public class MainApplication extends Application implements ReactApplication {
     }
   };
 
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
-  }
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+      return mReactNativeHost;
+    }
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    AppEventsLogger.activateApp(this);
-    SoLoader.init(this, /* native exopackage */ false);
+    @Override
+    public void onCreate() {
+      super.onCreate();
+      AppEventsLogger.activateApp(this);
+      SoLoader.init(this, /* native exopackage */ false);
   }
 }
