@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import {
-  View, ActivityIndicator, StatusBar, Text
-} from 'react-native';
+import { View, StatusBar } from 'react-native';
 import firebase from 'react-native-firebase';
+import { appTheme } from '../../constants/styles';
+import styles from './styles';
+
 /*
     Tela que aparecerá e decidirá
     se o usuário deve ir pra tela de login ou pra Home;
     Pode ser a Splash screen
 */
+import Logo from '../../components/Logo';
 
 export default class Splash extends Component {
+  componentDidMount = () => {
+    this.navigate();
+  };
+
   navigate = () => {
     setTimeout(() => {
       if (firebase.auth().currentUser) {
@@ -17,17 +23,14 @@ export default class Splash extends Component {
       } else {
         this.props.navigation.navigate('Auth');
       }
-    },
-    2000);
-  }
+    }, 2000);
+  };
 
   render() {
-    this.navigate();
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
-        <Text> Splashhhh! </Text>
+      <View style={styles.container}>
+        <StatusBar backgroundColor={appTheme.COLOR} barStyle="default" />
+        <Logo width={100} height={100} resizeMode="contain" />
       </View>
     );
   }

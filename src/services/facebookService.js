@@ -1,36 +1,7 @@
 import firebase from 'react-native-firebase';
 import {
-  AccessToken, LoginManager, GraphRequest, GraphRequestManager
+  AccessToken, GraphRequest, GraphRequestManager
 } from 'react-native-fbsdk';
-
-export const openFacebookDialog = async () => {
-  try {
-    LoginManager.setLoginBehavior(LoginManager.LoginBehaviors.Native);
-    const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
-    if (result.isCancelled) {
-      throw new Error('User cancelled request'); // Handle this however fits the flow of your app
-    }
-  } catch (e) {
-    console.log('result', e);
-  }
-};
-
-export const onLoginFinished = async (error, result) => {
-  if (error) {
-    console.log(`login has error: ${result.error}`);
-  } else if (result.isCancelled) {
-    console.log(result, 'login is cancelled.');
-  } else {
-    try {
-      const data = await getAccessToken();
-      const credential = getUserCredential(data.accessToken);
-      const user = await signInFirebase(credential);
-      getUserDataFromFacebook(user);
-    } catch (e) {
-      throw new Error('error on finish login');
-    }
-  }
-};
 
 export const getUserCredential = (accessToken) => {
   try {

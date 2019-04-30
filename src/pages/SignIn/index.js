@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
+import { View, ActivityIndicator, StatusBar, Text } from 'react-native';
+import { LoginButton, LoginManager } from 'react-native-fbsdk';
 import {
-  View, Text, ActivityIndicator
-} from 'react-native';
-import {
-  LoginButton, LoginManager
-} from 'react-native-fbsdk';
-import {
-  getUserCredential, getAccessToken, signInFirebase, setUserDataFromFacebook
+  getUserCredential,
+  getAccessToken,
+  signInFirebase,
+  setUserDataFromFacebook
 } from '../../services/facebookService';
+import styles from './styles';
+import { appTheme } from '../../constants/styles';
+import Logo from '../../components/Logo';
 
 export default class SignIn extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: false };
-  }
+  static navigationOptions = {
+    header: null
+  };
+
+  state = {
+    isLoading: false
+  };
 
   // Calling the following function will open the FB login dialogue:
   openFacebookDialog = async () => {
@@ -27,7 +32,7 @@ export default class SignIn extends Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   onLoginFinished = async (error, result) => {
     if (error) {
@@ -49,21 +54,35 @@ export default class SignIn extends Component {
           this.props.navigation.navigate('App');
         }
       } catch (e) {
+        this.setState({ isLoading: false });
         throw new Error('failed to login');
       }
     }
-  }
+  };
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text> SignIn </Text>
-        {this.state.isLoading && <ActivityIndicator />}
-        <LoginButton
-          readPermissions={['public_profile', 'email']}
-          onPress={this.openFacebookDialog}
-          onLoginFinished={this.onLoginFinished}
-        />
+      <View style={styles.container}>
+        <StatusBar backgroundColor={appTheme.COLOR} barStyle="default" />
+        <View style={styles.containerLogo}>
+          <Logo width={100} height={100} />
+        </View>
+        {this.state.isLoading && <ActivityIndicator size="large" color="#fff" />}
+        <View style={styles.containerButton}>
+          {!this.state.isLoading && (
+            <View>
+              <Text style={{ color: '#fff', fontSize: 15, marginBottom: 20, fontWeight: 'bold' }}>
+                Entre com o seu Facebook!
+              </Text>
+              <LoginButton
+                size="large"
+                readPermissions={['public_profile', 'email']}
+                onPress={this.openFacebookDialog}
+                onLoginFinished={this.onLoginFinished}
+              />
+            </View>
+          )}
+        </View>
       </View>
     );
   }

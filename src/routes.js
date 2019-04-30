@@ -1,15 +1,16 @@
-import { createAppContainer, createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import {
+  createAppContainer,
+  createSwitchNavigator,
+  createStackNavigator,
+  createBottomTabNavigator
+} from 'react-navigation';
 
 import Splash from './pages/Splash';
 import SignIn from './pages/SignIn';
 import Home from './pages/Home';
-import {
-  transitionConfig,
-  defaultNavigationOptions
-} from './config/NavigationConfig';
+import { transitionConfig, defaultNavigationOptions } from './config/NavigationConfig';
 
-
-const AppStack = createStackNavigator(
+const AppStack = createBottomTabNavigator(
   {
     Home: {
       screen: Home,
@@ -20,24 +21,23 @@ const AppStack = createStackNavigator(
 );
 const AuthStack = createStackNavigator(
   {
-    SignIn: {
-      screen: SignIn,
-      navigationOptions: { headerTitle: 'Login' }
-    }
+    SignIn
   },
   { defaultNavigationOptions }
 );
 // A Switch Navigator é feita para o fluxo de autenticação. (ler documentação)
 
-const Routes = createAppContainer(createSwitchNavigator(
-  {
-    Splash,
-    App: AppStack,
-    Auth: AuthStack,
-  },
-  {
-    initialRouteName: 'Splash',
-  }
-));
+const Routes = createAppContainer(
+  createSwitchNavigator(
+    {
+      Splash,
+      App: AppStack,
+      Auth: AuthStack
+    },
+    {
+      initialRouteName: 'Splash'
+    }
+  )
+);
 
 export default Routes;
