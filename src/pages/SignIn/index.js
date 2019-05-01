@@ -51,6 +51,8 @@ export default class SignIn extends Component {
           // const { email, name } = firebase.auth().currentUser;
           // const user = { email, name };
           // api.post(user);
+          // TOKEN USADO PARA FAZER AS REQUISIÇÕES NO BACKEND
+          console.log(firebase.auth().currentUser.getIdToken());
           this.props.navigation.navigate('App');
         }
       } catch (e) {
