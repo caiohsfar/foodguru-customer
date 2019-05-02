@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View } from 'react-native';
 import firebase from 'react-native-firebase';
-import { appTheme } from '../../constants/styles';
 import styles from './styles';
 
 /*
@@ -29,7 +28,6 @@ export default class Splash extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={appTheme.COLOR} barStyle="default" />
         <Logo width={100} height={100} resizeMode="contain" />
       </View>
     );

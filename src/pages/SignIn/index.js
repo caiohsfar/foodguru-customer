@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
-import { View, ActivityIndicator, StatusBar, Text } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { LoginButton, LoginManager } from 'react-native-fbsdk';
 import {
   getUserCredential,
@@ -9,7 +9,6 @@ import {
   setUserDataFromFacebook
 } from '../../services/facebookService';
 import styles from './styles';
-import { appTheme } from '../../constants/styles';
 import Logo from '../../components/Logo';
 
 export default class SignIn extends Component {
@@ -65,7 +64,6 @@ export default class SignIn extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={appTheme.COLOR} barStyle="default" />
         <View style={styles.containerLogo}>
           <Logo width={100} height={100} />
         </View>
