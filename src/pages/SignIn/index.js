@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text} from 'react-native';
 import { LoginButton, LoginManager } from 'react-native-fbsdk';
 import {
   getUserCredential,
@@ -65,7 +65,7 @@ export default class SignIn extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.containerLogo}>
-          <Logo width={100} height={100} />
+          <Logo width={130} height={130} resizeMode='contain' />
         </View>
         {this.state.isLoading && <ActivityIndicator size="large" color="#fff" />}
         <View style={styles.containerButton}>

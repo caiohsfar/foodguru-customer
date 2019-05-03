@@ -9,7 +9,7 @@ export default StyleSheet.create({
     backgroundColor: appTheme.COLOR
   },
   containerLogo: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'center'
   },

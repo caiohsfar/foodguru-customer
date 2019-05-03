@@ -28,7 +28,7 @@ export default class Splash extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Logo width={100} height={100} resizeMode="contain" />
+        <Logo width={120} height={120} resizeMode="contain" />
       </View>
     );
   }
