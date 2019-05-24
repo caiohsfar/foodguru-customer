@@ -84,9 +84,6 @@ export default class App extends Component {
             longitudeDelta: 0.0121,
           }}
           style={styles.mapView}
-          //rotateEnabled={false}
-          //scrollEnabled={false}
-          //zoomEnabled={false}
           showsPointsOfInterest={false}
           showBuildings={false}
           onMapReady={this._mapReady}
