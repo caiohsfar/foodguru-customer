@@ -1,77 +1,106 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 import { LoginManager } from 'react-native-fbsdk';
-import { ScrollView, View, Text, StyleSheet, Dimensions } from 'react-native';
 //import styles from './styles';
+import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import api from '../../services/api';
 import { getIdToken } from '../../services/userService';
 import MapView, { Marker } from 'react-native-maps';
 
-export default class Home extends Component {
-  logout = () => {
-    firebase.auth().signOut();
-    LoginManager.logOut();
-    this.props.navigation.navigate('Auth');
+export default class App extends Component {
+  state = {
+    places: [
+      {
+        id: 5,
+        title: 'Yoki Galetos',
+        description: 'Torrões',
+        latitude: -8.062283,
+        longitude: -34.932594
+      }
+    ],
+    // places: [
+     
+    //   {
+    //     id: 2,
+    //     title: 'Arena Camarão',
+    //     description: 'Cordeiro',
+    //     latitude: -8.060282,
+    //     longitude: -34.928128
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'Coni Móvel Temakeria',
+    //     description: 'Soledade',
+    //     latitude: -8.056676,
+    //     longitude: -34.892925
+    //   },
+    //   {
+    //     id: 4,
+    //     title: 'Cachacaria Tradição',
+    //     description: 'Graças',
+    //     latitude: -8.044604,
+    //     longitude: -34.898989
+    //   }
+    // ]
   };
 
-  requestExemplo = async () => {
+  /*requestExemplo = async () => {
     const token = await getIdToken();
     // Tem sempre que setar esse token pra validar a requisição
     api.defaults.headers.common['x-access-token'] = token;
     try {
-      const result = await api.get('/api/customers');
-      console.log('RESULT', result);
+      const response = await api.get('/establishments');
+      this.setState({places:response.data}),
+      console.log(result);
     } catch (e) {
-      console.log('RESULT', e);
+      console.log(e);
     }
-  };
-  state = {
-    places: [
-      {
-        id: 1,
-        title: 'Casa do café',
-        description: 'Café quentinho...',
-        latitude: -27.210671,
-        longitude: -49.63627
+  };*/
+  
+  findPlaces = async () => {
+    const token = await getIdToken();
+    api.defaults.headers.common['x-access-token'] = token;
+    try {
+      const { data } = await api.get('/establishments');
+      this.setState({ places: [...this.state.places, ...data] });
+    } catch(e) {
+      alert(e);
+    }
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      ({coords: {latitude, longitude}}) => {
+        this.setState({ latitude, longitude }),
+        this.findPlaces();
       },
-      {
-        id: 2,
-        title: 'RocketSeat',
-        description: 'Programação, empreendedorismo e mindset',
-        latitude: -27.200671,
-        longitude: -49.63627
-      },
-      {
-        id: 3,
-        title: 'Casa do José',
-        description: 'José, tá em casa?',
-        latitude: -27.200671,
-        longitude: -49.62627
-      }
-    ]
-  };
+      (error) => { console.log(error); },
+      { enableHighAccuracy: true, timeout: 30000 }
+    );
+  }
 
   _mapReady = () => {
     this.state.places[0].mark.showCallout();
   };
+  
 
   render() {
+    console.ignoredYellowBox = true;
     const { latitude, longitude } = this.state.places[0];
+    //const  {latitude, longitude} = this.state;
 
     return (
       <View style={styles.container}>
         <MapView
           ref={map => (this.mapView = map)}
+          showsUserLocation={true}
           initialRegion={{
             latitude,
             longitude,
-            latitudeDelta: 0.0142,
-            longitudeDelta: 0.0231
+            latitudeDelta: 0.0015,
+            longitudeDelta: 0.0121
           }}
           style={styles.mapView}
-          rotateEnabled={false}
-          scrollEnabled={false}
-          zoomEnabled={false}
           showsPointsOfInterest={false}
           showBuildings={false}
           onMapReady={this._mapReady}
@@ -117,8 +146,13 @@ export default class Home extends Component {
         >
           {this.state.places.map(place => (
             <View key={place.id} style={styles.place}>
-              <Text style={styles.title}>{place.title}</Text>
+              <Text style={styles.title}>{place.name}</Text>
               <Text style={styles.description}>{place.description}</Text>
+              <TouchableOpacity onPress={this.props.Cardapio} style={styles.buttonMenu}>
+                <View style={styles.menu}>
+                  <Text style={styles.menuFont}>Cardápio</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
@@ -143,31 +177,50 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0
   },
-
   placesContainer: {
     width: '100%',
-    maxHeight: 200
+    maxHeight: 150
   },
-
   place: {
     width: width - 40,
-    maxHeight: 200,
+    maxHeight: 150,
     backgroundColor: '#FFF',
+    marginHorizontal: 20,
     marginHorizontal: 20,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     padding: 20
   },
-
   title: {
+    textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
     backgroundColor: 'transparent'
   },
-
   description: {
+    textAlign: 'center',
     color: '#999',
     fontSize: 12,
     marginTop: 5
+  },
+  buttonMenu: {
+    marginTop: 10
+  },
+  menu: {
+    //flex: 0.5,
+    //flexDirection: 'row',
+    width: width - 80,
+    height: 30,
+    //paddingVertical: 20,
+    //padding: 20,
+    backgroundColor: '#cd170c',
+    borderRadius: 3
+  },
+  menuFont: {
+    textAlign: 'center',
+    //padding: 20,
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#fff'
   }
 });

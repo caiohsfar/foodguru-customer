@@ -58,3 +58,4 @@ buck-out/
 # Environment variables
 android/local.properties
 android/app/my-release-key.keystore
+.env
