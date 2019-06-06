@@ -1,0 +1,9 @@
+export const FETCH_PRODUCTS_SUCCESS = 'fetch_products_success';
+export const FETCH_PRODUCTS_FAILURE = 'fetch_products_failure';
+export const FETCH_CATEGORIES_SUCCESS = 'fetch_categories_success';
+export const FETCH_CATEGORIES_FAILURE = 'fetch_categories_failure';
+export const IS_LOADING_FETCHING_PRODUCTS = 'is_loading_fetching_products';
+export const IS_LOADING_FETCHING_CATEGORIES = 'is_loading_fetching_categories';
+export const ADD_TO_CART = 'add_to_cart';
+export const REMOVE_FROM_CART = 'remove_from_cart';
+export const CLEAR_CART = 'clear_cart';

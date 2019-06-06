@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 import { LoginManager } from 'react-native-fbsdk';
-//import styles from './styles';
-import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+// import styles from './styles';
+import {
+  ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity
+} from 'react-native';
+import MapView from 'react-native-maps';
 import api from '../../services/api';
 import { getIdToken } from '../../services/userService';
-import MapView, { Marker } from 'react-native-maps';
+import { getMinDistanceMarker } from '../../services/geoLocationService';
 
-export default class App extends Component {
+export default class Map extends Component {
   state = {
+    minDistancePlace: null,
+    currentPosition: {
+      latitude: null,
+      longitude: null
+    },
     places: [
       {
-        id: 5,
+        id: 150,
         title: 'Yoki Galetos',
         description: 'Torrões',
         latitude: -8.062283,
@@ -19,7 +27,7 @@ export default class App extends Component {
       }
     ],
     // places: [
-     
+
     //   {
     //     id: 2,
     //     title: 'Arena Camarão',
@@ -44,7 +52,7 @@ export default class App extends Component {
     // ]
   };
 
-  /*requestExemplo = async () => {
+  /* requestExemplo = async () => {
     const token = await getIdToken();
     // Tem sempre que setar esse token pra validar a requisição
     api.defaults.headers.common['x-access-token'] = token;
@@ -55,23 +63,12 @@ export default class App extends Component {
     } catch (e) {
       console.log(e);
     }
-  };*/
-  
-  findPlaces = async () => {
-    const token = await getIdToken();
-    api.defaults.headers.common['x-access-token'] = token;
-    try {
-      const { data } = await api.get('/establishments');
-      this.setState({ places: [...this.state.places, ...data] });
-    } catch(e) {
-      alert(e);
-    }
-  }
-
+  }; */
   componentDidMount() {
+    // eslint-disable-next-line no-undef
     navigator.geolocation.getCurrentPosition(
-      ({coords: {latitude, longitude}}) => {
-        this.setState({ latitude, longitude }),
+      ({ coords: { latitude, longitude } }) => {
+        this.setState({ currentPosition: { latitude, longitude } });
         this.findPlaces();
       },
       (error) => { console.log(error); },
@@ -79,21 +76,39 @@ export default class App extends Component {
     );
   }
 
+  findPlaces = async () => {
+    const token = await getIdToken();
+    api.defaults.headers.common['x-access-token'] = token;
+    try {
+      const { data } = await api.get('/establishments');
+      this.setState({ places: [...this.state.places, ...data] });
+      const minDistancePlace = getMinDistanceMarker(
+        this.state.currentPosition,
+        this.state.places
+      );
+      this.setState({ minDistancePlace });
+    } catch (e) {
+      alert(e);
+    }
+  }
+
   _mapReady = () => {
     this.state.places[0].mark.showCallout();
+    // this.state.places[0].mark.showCallout();
+
   };
-  
+
 
   render() {
     console.ignoredYellowBox = true;
     const { latitude, longitude } = this.state.places[0];
-    //const  {latitude, longitude} = this.state;
+    // const  {latitude, longitude} = this.state;
 
     return (
       <View style={styles.container}>
         <MapView
           ref={map => (this.mapView = map)}
-          showsUserLocation={true}
+          showsUserLocation
           initialRegion={{
             latitude,
             longitude,
@@ -108,8 +123,8 @@ export default class App extends Component {
           {this.state.places.map(place => (
             <MapView.Marker
               ref={mark => (place.mark = mark)}
-              title={place.title}
-              description={place.description}
+              title={place.name}
+              description={place.street}
               key={place.id}
               coordinate={{
                 latitude: place.latitude,
@@ -123,11 +138,10 @@ export default class App extends Component {
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={e => {
-            const place =
-              e.nativeEvent.contentOffset.x > 0
-                ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
-                : 0;
+          onMomentumScrollEnd={(e) => {
+            const place = e.nativeEvent.contentOffset.x > 0
+              ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
+              : 0;
 
             const { latitude, longitude, mark } = this.state.places[place];
 
@@ -207,18 +221,18 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   menu: {
-    //flex: 0.5,
-    //flexDirection: 'row',
+    // flex: 0.5,
+    // flexDirection: 'row',
     width: width - 80,
     height: 30,
-    //paddingVertical: 20,
-    //padding: 20,
+    // paddingVertical: 20,
+    // padding: 20,
     backgroundColor: '#cd170c',
     borderRadius: 3
   },
   menuFont: {
     textAlign: 'center',
-    //padding: 20,
+    // padding: 20,
     fontWeight: 'bold',
     fontSize: 18,
     color: '#fff'

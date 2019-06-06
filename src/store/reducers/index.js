@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
+import MenuReducer from './MenuReducer';
+import BillReducer from './BillReducer';
 
 const Reducers = combineReducers({
-  exemplo: () => ({ ex: '' })
+  MenuReducer,
+  BillReducer
 });
 
 export default Reducers;
