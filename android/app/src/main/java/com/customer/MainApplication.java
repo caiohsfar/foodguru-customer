@@ -19,7 +19,6 @@ import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
 import com.airbnb.android.react.maps.MapsPackage;
 
-
 import java.util.Arrays;
 import java.util.List;
 

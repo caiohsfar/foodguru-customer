@@ -8,14 +8,19 @@ import {
 import Splash from './pages/Splash';
 import SignIn from './pages/SignIn';
 import Home from './pages/Home';
+import Menu from './pages/Menu';
 import { transitionConfig, defaultNavigationOptions } from './config/NavigationConfig';
 
 const AppStack = createBottomTabNavigator(
   {
-    Home: {
+    /*Home: {
       screen: Home,
       navigationOptions: { headerTitle: 'Home' }
-    }
+    },*/
+    Menu: {
+      screen: Menu,
+      navigationOptions: { headerTitle: 'Cardápio' }
+    },
   },
   { transitionConfig, defaultNavigationOptions }
 );

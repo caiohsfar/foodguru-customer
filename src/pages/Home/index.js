@@ -8,54 +8,24 @@ import { getIdToken } from '../../services/userService';
 import MapView, { Marker } from 'react-native-maps';
 
 export default class App extends Component {
-  state = {
-    places: [
-      {
-        id: 5,
-        title: 'Yoki Galetos',
-        description: 'Torrões',
-        latitude: -8.062283,
-        longitude: -34.932594
-      }
-    ],
-    // places: [
-     
-    //   {
-    //     id: 2,
-    //     title: 'Arena Camarão',
-    //     description: 'Cordeiro',
-    //     latitude: -8.060282,
-    //     longitude: -34.928128
-    //   },
-    //   {
-    //     id: 3,
-    //     title: 'Coni Móvel Temakeria',
-    //     description: 'Soledade',
-    //     latitude: -8.056676,
-    //     longitude: -34.892925
-    //   },
-    //   {
-    //     id: 4,
-    //     title: 'Cachacaria Tradição',
-    //     description: 'Graças',
-    //     latitude: -8.044604,
-    //     longitude: -34.898989
-    //   }
-    // ]
-  };
 
-  /*requestExemplo = async () => {
-    const token = await getIdToken();
-    // Tem sempre que setar esse token pra validar a requisição
-    api.defaults.headers.common['x-access-token'] = token;
-    try {
-      const response = await api.get('/establishments');
-      this.setState({places:response.data}),
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
-  };*/
+  constructor(props) {
+    super(props);
+    this.state = { latitude: null, longitude: null,
+    places: [{  name: "San Botequim",
+                email: "sanbotequim@gmail.com",
+                cep: "50761320",
+                street: "Rua Comendador José Vita",
+                state:"Pernambuco",
+                neighborhood:"San Martin",
+                cnpj:"12261658000136",
+                city:"Recife",
+                number:"384",
+                password:"123456",
+                latitude: -8.068914,
+                longitude: -34.927495
+}],
+  }};
   
   findPlaces = async () => {
     const token = await getIdToken();
@@ -67,11 +37,11 @@ export default class App extends Component {
       alert(e);
     }
   }
-
+  
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       ({coords: {latitude, longitude}}) => {
-        this.setState({ latitude, longitude }),
+        this.setState({ latitude, longitude });
         this.findPlaces();
       },
       (error) => { console.log(error); },
@@ -82,12 +52,11 @@ export default class App extends Component {
   _mapReady = () => {
     this.state.places[0].mark.showCallout();
   };
-  
 
   render() {
     console.ignoredYellowBox = true;
     const { latitude, longitude } = this.state.places[0];
-    //const  {latitude, longitude} = this.state;
+    console.log(this.state.places);
 
     return (
       <View style={styles.container}>
@@ -147,7 +116,7 @@ export default class App extends Component {
           {this.state.places.map(place => (
             <View key={place.id} style={styles.place}>
               <Text style={styles.title}>{place.name}</Text>
-              <Text style={styles.description}>{place.description}</Text>
+              <Text style={styles.description}>{place.neighborhood}</Text>
               <TouchableOpacity onPress={this.props.Cardapio} style={styles.buttonMenu}>
                 <View style={styles.menu}>
                   <Text style={styles.menuFont}>Cardápio</Text>
@@ -207,18 +176,13 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   menu: {
-    //flex: 0.5,
-    //flexDirection: 'row',
     width: width - 80,
     height: 30,
-    //paddingVertical: 20,
-    //padding: 20,
     backgroundColor: '#cd170c',
     borderRadius: 3
   },
   menuFont: {
     textAlign: 'center',
-    //padding: 20,
     fontWeight: 'bold',
     fontSize: 18,
     color: '#fff'
