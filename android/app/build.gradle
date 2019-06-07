@@ -104,7 +104,6 @@ android {
 
     defaultConfig {
         applicationId "com.customer"
-        missingDimensionStrategy 'react-native-camera', 'general'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -159,13 +158,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation project(':react-native-maps')
-    implementation (project(':react-native-camera')) {
-        exclude group: "com.google.android.gms"
-        implementation 'com.android.support:exifinterface:27.+'
-        implementation('com.google.android.gms:play-services-vision:17.0.2') {
-            force = true
-        }
-    }
 }
 
 // Run this once to be able to run the application with BUCK

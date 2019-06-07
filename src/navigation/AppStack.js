@@ -5,23 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createStackNavigator } from 'react-navigation';
 import Bill from '../pages/Bill';
 import Map from '../pages/Map';
-import ShoppingCart from '../pages/ShoppingCart';
 import Menu from '../pages/Menu';
 import ScannerScreen from '../pages/ScannerScreen';
 import { appTheme } from '../constants/styles';
-
-export default createStackNavigator(
-  {
-    Map,
-    Menu,
-    ShoppingCart,
-    ScannerScreen,
-    Bill: {
-      screen: ConsumerStack
-    }
-  },
-  { initialRouteName: 'Map' }
-);
 
 const ConsumerStack = createMaterialBottomTabNavigator(
   {
@@ -37,14 +23,7 @@ const ConsumerStack = createMaterialBottomTabNavigator(
       }
     },
     Menu: {
-      screen: createStackNavigator(
-        {
-          ShoppingCart,
-          Menu
-        },
-        { initialRouteName: 'Menu' }
-      ),
-
+      screen: Menu,
       navigationOptions: {
         tabBarLabel: 'Menu',
         tabBarIcon: ({ tintColor }) => (
@@ -63,4 +42,30 @@ const ConsumerStack = createMaterialBottomTabNavigator(
     inactiveColor: '#800000',
     barStyle: { backgroundColor: appTheme.COLOR }
   }
+);
+
+export default createStackNavigator(
+  {
+    Map: {
+      screen: Map,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Menu: {
+      screen: Menu,
+      navigationOptions: {
+        headerTitle: 'Menu',
+        headerStyle: {
+          backgroundColor: '#520000'
+        },
+        headerTintColor: '#fff'
+      }
+    },
+    ScannerScreen,
+    Bill: {
+      screen: ConsumerStack
+    }
+  },
+  { initialRouteName: 'Map' }
 );

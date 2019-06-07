@@ -10,18 +10,19 @@ import {
   IS_LOADING_FETCHING_CATEGORIES,
   ADD_TO_CART,
   REMOVE_FROM_CART,
-  CLEAR_CART
-
+  CLEAR_CART,
+  CLEAR_PRODUCTS,
+  CLEAR_CATEGORIES
 } from '../types/MenuTypes';
 
 import api from '../../services/api';
 
-export const clearCart = ({
+export const clearCart = {
   type: CLEAR_CART
-});
-export const removeFromCart = id => ({
+};
+export const removeFromCart = product => ({
   type: REMOVE_FROM_CART,
-  payload: id
+  payload: product
 });
 
 export const addToCart = product => ({
@@ -56,8 +57,8 @@ export const fetchProductsFailure = error => ({
   payload: error.response.message || error
 });
 
-export const fetchCategorias = idEstab => async (dispatch) => {
-  dispatch(isLoadingFetchingProducts());
+export const fetchCategories = idEstab => async (dispatch) => {
+  dispatch(isLoadingFetchingCategories());
   const accessToken = await getIdToken();
   api.defaults.headers.common['x-access-token'] = accessToken;
   api
@@ -67,6 +68,14 @@ export const fetchCategorias = idEstab => async (dispatch) => {
     })
     .catch(error => dispatch(fetchCategoriesFailure(error)));
 };
+
+export const clearProducts = () => ({
+  type: CLEAR_PRODUCTS
+});
+
+export const clearCategories = () => ({
+  type: CLEAR_CATEGORIES
+});
 
 export const fetchCategoriesSuccess = list => ({
   type: FETCH_CATEGORIES_SUCCESS,

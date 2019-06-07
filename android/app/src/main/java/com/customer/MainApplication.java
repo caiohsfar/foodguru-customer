@@ -8,7 +8,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import org.reactnative.camera.RNCameraPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -41,7 +40,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new RNGestureHandlerPackage(),
-            new RNCameraPackage(),
             new MapsPackage(),
             new RNGoogleSigninPackage(),
             new FBSDKPackage(mCallbackManager),

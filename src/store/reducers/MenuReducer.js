@@ -8,7 +8,9 @@ import {
   IS_LOADING_FETCHING_CATEGORIES,
   ADD_TO_CART,
   REMOVE_FROM_CART,
-  CLEAR_CART
+  CLEAR_CART,
+  CLEAR_CATEGORIES,
+  CLEAR_PRODUCTS
 } from '../types/MenuTypes';
 
 const INITIAL_STATE = {
@@ -18,7 +20,9 @@ const INITIAL_STATE = {
   fetchCategoriesLoadState: false,
   productList: [],
   categoryList: [],
-  shoppingCart: []
+  shoppingCart: [],
+  totalFromCart: 0,
+  cartItemsQuantity: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -62,19 +66,69 @@ export default (state = INITIAL_STATE, action) => {
     case ADD_TO_CART:
       return {
         ...state,
-        shoppingCart: [...state.shoppingCart, action.payload]
+        shoppingCart: addToCart(action, state),
+        totalFromCart: state.totalFromCart + action.payload.price,
+        cartItemsQuantity: state.cartItemsQuantity + action.payload.quantity
       };
     case REMOVE_FROM_CART:
       return {
         ...state,
-        shoppingCart: state.shoppingCart.filter(product => product.id !== action.payload)
+        shoppingCart: removeFromCart(action, state),
+        totalFromCart: state.totalFromCart - action.payload.price,
+        cartItemsQuantity: state.cartItemsQuantity - 1
       };
     case CLEAR_CART:
       return {
         ...state,
-        shoppingCart: []
+        shoppingCart: [],
+        totalFromCart: 0
+      };
+    case CLEAR_CATEGORIES:
+      return {
+        ...state,
+        categoryList: []
+      };
+    case CLEAR_PRODUCTS:
+      return {
+        ...state,
+        productList: []
       };
     default:
       return state;
   }
+};
+
+const removeFromCart = ({ payload }, { shoppingCart }) => {
+  for (let index = 0; index < shoppingCart.length; index++) {
+    const product = shoppingCart[index];
+    if (product.id === payload.id && product.quantity === 1) {
+      return shoppingCart.filter(productf => productf.id !== payload.id );
+    }
+  }
+  return shoppingCart.map(product => (product.id === payload.id
+    ? {
+      ...product,
+      quantity: product.quantity - 1,
+      price: product.price - product.price / product.quantity
+    }
+    : product));
+};
+
+const addToCart = ({ payload }, { shoppingCart }) => {
+  let exists = false;
+  shoppingCart.forEach((product) => {
+    if (product.id === payload.id) {
+      exists = true;
+    }
+  });
+  if (!exists) {
+    return [...shoppingCart, payload];
+  }
+  return shoppingCart.map(product => (product.id === payload.id
+    ? {
+      ...product,
+      quantity: product.quantity + payload.quantity,
+      price: product.price + payload.price
+    }
+    : product));
 };
