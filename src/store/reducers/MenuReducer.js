@@ -81,7 +81,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         shoppingCart: [],
-        totalFromCart: 0
+        totalFromCart: 0,
+        cartItemsQuantity: 0
       };
     case CLEAR_CATEGORIES:
       return {
@@ -99,11 +100,15 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 const removeFromCart = ({ payload }, { shoppingCart }) => {
-  for (let index = 0; index < shoppingCart.length; index++) {
-    const product = shoppingCart[index];
-    if (product.id === payload.id && product.quantity === 1) {
-      return shoppingCart.filter(productf => productf.id !== payload.id );
-    }
+  // for (let index = 0; index < shoppingCart.length; index++) {
+  //   const product = shoppingCart[index];
+  //   if (product.id === payload.id && product.quantity === 1) {
+  //     return shoppingCart.filter(productf => productf.id !== payload.id );
+  //   }
+  // }
+  const shouldDelete = shoppingCart.some(({ id, quantity }) => id === payload.id && quantity === 1);
+  if (shouldDelete) {
+    return shoppingCart.filter(({ id }) => id !== payload.id);
   }
   return shoppingCart.map(product => (product.id === payload.id
     ? {
@@ -115,13 +120,9 @@ const removeFromCart = ({ payload }, { shoppingCart }) => {
 };
 
 const addToCart = ({ payload }, { shoppingCart }) => {
-  let exists = false;
-  shoppingCart.forEach((product) => {
-    if (product.id === payload.id) {
-      exists = true;
-    }
-  });
-  if (!exists) {
+  const productExists = shoppingCart.some(product => product.id === payload.id);
+
+  if (!productExists) {
     return [...shoppingCart, payload];
   }
   return shoppingCart.map(product => (product.id === payload.id

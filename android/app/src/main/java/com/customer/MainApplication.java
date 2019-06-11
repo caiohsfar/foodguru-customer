@@ -1,6 +1,7 @@
 package com.customer;
 
 import android.app.Application;
+import com.customer.generated.BasePackageList;
 
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.facebook.CallbackManager;
@@ -9,7 +10,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
@@ -17,13 +17,16 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
-import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import org.unimodules.adapters.react.ModuleRegistryAdapter;
+import org.unimodules.adapters.react.ReactModuleRegistryProvider;
+import org.unimodules.core.interfaces.SingletonModule;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+  private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(new BasePackageList().getPackageList(), Arrays.<SingletonModule>asList());
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
   
   protected static CallbackManager getCallbackManager() {
@@ -41,12 +44,13 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNGestureHandlerPackage(),
             new MapsPackage(),
-            new RNGoogleSigninPackage(),
             new FBSDKPackage(mCallbackManager),
             new RNFirebasePackage(),
             new RNFirebaseAuthPackage(),
             new ReactNativeConfigPackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+            new ModuleRegistryAdapter(mModuleRegistryProvider)
+
       );
     }
 

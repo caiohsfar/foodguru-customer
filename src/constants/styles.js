@@ -1,4 +1,4 @@
 export const appTheme = {
-  COLOR: '#ff0000',
+  COLOR: '#cd170c',
   FONT_COLOR: '#fff'
 };

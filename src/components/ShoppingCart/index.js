@@ -1,38 +1,39 @@
 import React, { Component } from 'react';
-import {
-  Text, View, Animated, Dimensions, FlatList
-} from 'react-native';
+import { Text, View, Animated, Dimensions, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import SlidingUpPanel from 'rn-sliding-up-panel';
+import NavigationService from '../../services/NavigationService';
 
+import { Header as navigationHeader } from 'react-navigation';
+import reactotron from 'reactotron-react-native';
+import { Button } from 'react-native-elements';
 import styles from './styles';
 import Header from './Header';
-import { Header as navigationHeader } from 'react-navigation';
 import { removeFromCart, clearCart, addToCart } from '../../store/actions/MenuActions';
 import ShoppingCartItem from './ShoppingCartItem';
-import reactotron from 'reactotron-react-native';
 
 const { height } = Dimensions.get('window');
 
 class ShoppingCart extends Component {
   static defaultProps = {
     draggableRange: {
-      top: (height - navigationHeader.HEIGHT) / 1.10,
+      top: (height - navigationHeader.HEIGHT) / 1.15,
       bottom: 65
     }
   };
 
   state = {
-    panel: ''
+    panel: '',
   };
 
   _draggedValue = new Animated.Value(this.props.draggableRange.bottom);
 
-  componentDidMount() {
+  async componentDidMount() {
     this._draggedValue.addListener(this._onAnimatedValueChange);
   }
 
   componentWillUnmount() {
+    this.props.clearCart();
     this._draggedValue.removeListener(this._onAnimatedValueChange);
   }
 
@@ -52,39 +53,76 @@ class ShoppingCart extends Component {
 
   _onChangeCount = (value, type, product) => {
     if (type === '+') {
-      this.props.addToCart({ ...product, quantity: 1, price: product.price / product.quantity });
+      this.props.addToCart(this.getConsumerItem(product));
     } else if (type === '-') {
-      this.props.removeFromCart({...product, quantity: 1, price: product.price / product.quantity });
+      this.props.removeFromCart(this.getConsumerItem(product));
     }
-  }
+  };
+
+  getConsumerItem = product => ({
+    ...product,
+    quantity: 1,
+    price: product.price / product.quantity
+  });
 
   _renderItem = ({ item }) => {
     reactotron.log(item);
-    return (
-      <ShoppingCartItem
-        product={item}
-        onChangeCount={this._onChangeCount}
-      />
-  )};
+    return <ShoppingCartItem product={item} onChangeCount={this._onChangeCount} />;
+  };
+
+  handleClearCart = () => {
+    this.props.clearCart();
+  };
+
+  getPosition() {
+    return this.state.animatedValue;
+  }
 
   render() {
-    const { cartItemsQuantity, totalFromCart } = this.props;
+    const { cartItemsQuantity, totalFromCart, draggableRange, shoppingCart } = this.props;
+
     return (
       <SlidingUpPanel
         minimumDistanceThreshold={10}
-        backdropOpacity={0.1}
+        backdropOpacity={0.3}
         ref={c => (this._panel = c)}
-        draggableRange={this.props.draggableRange}
+        draggableRange={draggableRange}
         animatedValue={this._draggedValue}
       >
         <View style={styles.panel}>
           <Header showOrHide={this.showOrHide} count={cartItemsQuantity} total={totalFromCart} />
           <FlatList
-            data={this.props.shoppingCart}
+            data={shoppingCart}
             showsHorizontalScrollIndicator={false}
             renderItem={this._renderItem}
             keyExtractor={this._keyExtractor}
+            ListFooterComponent={() =>
+              shoppingCart.length > 0 && (
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: 40,
+                    marginBottom: 40
+                  }}
+                >
+                  <TouchableOpacity onPress={this.handleClearCart}>
+                    <Text style={{ borderBottomWidth: StyleSheet.hairlineWidth, fontSize: 18, color: 'red' }}>
+                      Esvaziar carrinho
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
           />
+          <Button
+            disabled={!shoppingCart.length > 0}
+            buttonStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: 'red', width: 300 }}
+            titleStyle={{ fontWeight: 'bold' }}
+            title="Confirmar"
+            onPress={() => this.props.onShopping()}
+          />
+        
         </View>
       </SlidingUpPanel>
     );
@@ -96,4 +134,7 @@ const mapStateToProps = ({ MenuReducer }) => ({
   cartItemsQuantity: MenuReducer.cartItemsQuantity
 });
 
-export default connect(mapStateToProps, { removeFromCart, clearCart, addToCart })(ShoppingCart);
+export default connect(
+  mapStateToProps,
+  { removeFromCart, clearCart, addToCart }
+)(ShoppingCart);

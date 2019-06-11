@@ -25,7 +25,7 @@ export default StyleSheet.create({
     fontSize: 16,
     marginRight: 10,
     fontWeight: 'bold',
-    color: '#ff0000'
+    color: appTheme.COLOR
   },
   gray: { color: '#9DA3B4' },
   avatar: {
@@ -44,7 +44,7 @@ export default StyleSheet.create({
     paddingBottom: 5
   },
   active: {
-    borderBottomColor: '#ff0000',
+    borderBottomColor: appTheme.COLOR,
     borderBottomWidth: 3
   },
   categories: {
@@ -71,7 +71,7 @@ export default StyleSheet.create({
   order: {
     height: 20,
     width: 20,
-    backgroundColor: '#cd170c',
+    backgroundColor: appTheme.COLOR,
     borderRadius: 50
   },
   more: {

@@ -17,9 +17,9 @@ import {
 
 import api from '../../services/api';
 
-export const clearCart = {
+export const clearCart = () => ({
   type: CLEAR_CART
-};
+});
 export const removeFromCart = product => ({
   type: REMOVE_FROM_CART,
   payload: product

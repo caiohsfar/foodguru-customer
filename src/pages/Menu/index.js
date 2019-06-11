@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import {
-  Image, View, Text, TouchableOpacity
+  Image, View, Text, TouchableOpacity, PermissionsAndroid, ActivityIndicator
 } from 'react-native';
-import { PermissionsAndroid } from 'react-native';
 import {
   Card, CardItem, Left, Right
 } from 'native-base';
 import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import reactotron from 'reactotron-react-native';
-import { ActivityIndicator } from 'react-native';
 import styles from './styles';
 
 import {
-  fetchCategories, fetchProducts, clearProducts, clearCategories, addToCart, removeFromCart, clearCart
+  fetchCategories,
+  fetchProducts,
+  clearProducts,
+  clearCategories,
+  addToCart,
+  removeFromCart,
+  clearCart
 } from '../../store/actions/MenuActions';
 import ShoppingCart from '../../components/ShoppingCart';
-import Modal from './modal';
+import Modal from './Modal';
 
 class Menu extends Component {
   state={
@@ -33,10 +37,11 @@ class Menu extends Component {
 
   handleModalPress = (product) => {
     this.setModalVisible(false);
-    //add ao carrinho(this.state.selectedproduct)
-    this.props.addToCart({ ...product, quantity: this.state.counter, price: this.state.counter * product.price });
-    this.setState({ counter: 1 });
-
+    this.props.addToCart({
+      ...product,
+      quantity: this.state.counter,
+      price: this.state.counter * product.price
+    });
   }
 
   setModalVisible = (status, product) => {
@@ -44,6 +49,7 @@ class Menu extends Component {
       this.setState({ selectedProduct: product });
     }
     this.setState({ isModalVisible: status });
+    this.setState({ counter: 1 });
   }
 
   componentWillUnmount = () => {
@@ -58,39 +64,43 @@ class Menu extends Component {
   }
 
   // ATÉ A FUNCIONALIDADE DE UPLOAD ESTIVER PRONTA
-  async requestReadPermission() {
+  requestReadPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         {
           title: 'Food Guru!',
           message:
-            'Precisamos do acesso às sua galeria para uma melhor experiência ',
+            'Precisamos do acesso à sua galeria para uma melhor experiência ',
           buttonNeutral: 'Pergunte-me depois',
           buttonNegative: 'Cancelar',
           buttonPositive: 'OK',
         },
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-      } else {
-        console.log('Camera permission denied');
-      }
+      // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      //   console.log('You can use the camera');
+      // } else {
+      //   console.log('Camera permission denied');
+      // }
     } catch (err) {
       console.warn(err);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { categoryList } = this.props;
-    if (categoryList !== nextProps.categoryList && nextProps.categoryList.length > 0) {
-      this.setState({ active: nextProps.categoryList[0] });
-      this.props.fetchProducts(nextProps.categoryList[0].id);
+    const { categoryList } = nextProps;
+    if (this.props.categoryList !== categoryList && categoryList.length > 0) {
+      this.setState({ active: categoryList[0] });
+      this.props.fetchProducts(categoryList[0].id);
     }
   }
 
   handlePlusPress= () => {
     this.setState({ isHover: true });
+  }
+
+  handleConfimShopping = () => {
+    this.props.navigation.navigate('QrCodeScanner');
   }
 
   handleTab = (tab) => {
@@ -121,8 +131,14 @@ class Menu extends Component {
   renderList = () => {
     // TODO: ajeitar o fluxo de loading dos products;
     const {
-      productList, fetchProductsLoadState, fetchCategoriesLoadState, fetchProductsError, fetchCategoriesError, categoryList
+      productList,
+      fetchProductsLoadState,
+      fetchCategoriesLoadState,
+      fetchProductsError,
+      fetchCategoriesError,
+      categoryList
     } = this.props;
+
     if (fetchProductsLoadState) {
       return <ActivityIndicator />;
     }
@@ -159,9 +175,9 @@ class Menu extends Component {
               <Right style={{ paddingTop: 10, marginLeft: 10 }}>
                 <View>
                   <Text style={styles.textCardRight}>
-                    R$ 
-{' '}
-{product.price.toFixed(2)}
+                    R$
+                    {' '}
+                    {product.price.toFixed(2)}
                   </Text>
 
                 </View>
@@ -177,15 +193,17 @@ class Menu extends Component {
     // categoryList
     return (
       <View style={{ flex: 1 }}>
-        { this.state.isModalVisible &&
-          <Modal
-            product={this.state.selectedProduct}
-            isVisible={this.state.isModalVisible}
-            handlePress={this.handleModalPress}
-            setVisible={this.setModalVisible}
-            onChangeCounter={this.onChangeCounter}
-        />
-        
+        { this.state.isModalVisible
+          && (
+            <Modal
+              product={this.state.selectedProduct}
+              isVisible={this.state.isModalVisible}
+              handlePress={this.handleModalPress}
+              setVisible={this.setModalVisible}
+              onChangeCounter={this.onChangeCounter}
+            />
+          )
+
         }
         <View style={{ flex: 1 }}>
           <ScrollView
@@ -208,7 +226,7 @@ class Menu extends Component {
             </View>
           </ScrollView>
         </View>
-        <ShoppingCart />
+        <ShoppingCart onShopping={this.handleConfimShopping} />
       </View>
     );
   }
@@ -225,5 +243,11 @@ const mapStateToProps = ({ MenuReducer }) => ({
 });
 
 export default connect(mapStateToProps, {
-  fetchCategories, fetchProducts, clearProducts, clearCategories, addToCart, clearCart, removeFromCart
+  fetchCategories,
+  fetchProducts,
+  clearProducts,
+  clearCategories,
+  addToCart,
+  clearCart,
+  removeFromCart
 })(Menu);

@@ -2,13 +2,13 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import { View } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator, Header } from 'react-navigation';
 import Bill from '../pages/Bill';
 import Map from '../pages/Map';
 import Menu from '../pages/Menu';
-import ScannerScreen from '../pages/ScannerScreen';
+import QrCodeScanner from '../pages/QrCodeScanner';
 import { appTheme } from '../constants/styles';
-
+import { transitionConfig } from '../config/NavigationConfig'
 const ConsumerStack = createMaterialBottomTabNavigator(
   {
     Bill: {
@@ -39,7 +39,7 @@ const ConsumerStack = createMaterialBottomTabNavigator(
     backBehavior: 'order',
     initialRouteName: 'Menu',
     activeColor: '#ddd',
-    inactiveColor: '#800000',
+    inactiveColor: appTheme.COLOR,
     barStyle: { backgroundColor: appTheme.COLOR }
   }
 );
@@ -57,15 +57,26 @@ export default createStackNavigator(
       navigationOptions: {
         headerTitle: 'Menu',
         headerStyle: {
-          backgroundColor: '#520000'
+          backgroundColor: appTheme.COLOR
         },
-        headerTintColor: '#fff'
+        headerTintColor: '#FFF'
       }
     },
-    ScannerScreen,
+    QrCodeScanner: {
+      screen: QrCodeScanner,
+      navigationOptions: {
+        headerTitle: 'Escanear QrCode',
+        headerStyle: {
+          backgroundColor: appTheme.COLOR,
+        },
+        headerTintColor: '#FFF'
+      }
+    },
     Bill: {
       screen: ConsumerStack
     }
   },
-  { initialRouteName: 'Map' }
+  { initialRouteName: 'Map',
+transitionConfig 
+}
 );

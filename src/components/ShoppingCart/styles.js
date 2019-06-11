@@ -1,19 +1,22 @@
 import { StyleSheet } from 'react-native';
+import { Header as navigationHeader } from 'react-navigation';
 import { appTheme } from '../../constants/styles';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    opacity: 0.9,
     alignItems: 'center',
     justifyContent: 'center'
   },
   panel: {
     flex: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: '#fff',
     position: 'relative',
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    borderTopRightRadius: 10,
+    marginBottom: (65 + navigationHeader.HEIGHT) / 1.1
   },
   panelHeader: {
     paddingHorizontal: 20,

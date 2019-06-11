@@ -4,10 +4,11 @@ import { Icon, Badge } from 'react-native-elements';
 import { Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles';
 
-export default ({ showOrHide, count, total }) => (
+export default ({
+  showOrHide, count, total, cartStatus
+}) => (
   <TouchableOpacity style={styles.panelHeader} onPress={showOrHide}>
     <View style={styles.containerCount}>
-      <Icon name="shopping-cart" size={20} color="#fff" containerStyle={{ marginRight: 10 }} />
       <Badge
         value={<Text style={{ color: '#fff', fontWeight: 'bold' }}>{count}</Text>}
         badgeStyle={{ backgroundColor: '#b30000', borderColor: '#b30000' }}
@@ -18,7 +19,7 @@ export default ({ showOrHide, count, total }) => (
     </View>
     <View style={styles.containerPrice}>
       <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>
-R$
+        R$
         {total.toFixed(2)}
       </Text>
     </View>

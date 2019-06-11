@@ -24,8 +24,11 @@ export default class ModalMenu extends React.Component {
 
     return (
       <Overlay
+        borderRadius={4}
+        animated
+        animationType='fade'
         isVisible={isVisible}
-        windowBackgroundColor="rgba(255, 255, 255, .5)"
+        windowBackgroundColor="rgba(166, 166, 166, .5)"
         overlayBackgroundColor="#fff"
         onBackdropPress={() => setVisible(false, null)}
         height={180}
